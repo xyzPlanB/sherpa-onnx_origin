@@ -37,10 +37,10 @@ jobs:
           ./build-android-arm64-v8a.sh
 
       
-      - name: Strip libraries (reduce size)
-        run: |
-          $ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip \
-          build-android-arm64-v8a/install/lib/*.so
+      #- name: Strip libraries (reduce size)
+        #run: |
+          #$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip \
+          #build-android-arm64-v8a/install/lib/*.so
 
       - name: Upload .so artifacts
         uses: actions/upload-artifact@v4
