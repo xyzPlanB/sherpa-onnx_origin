@@ -1,0 +1,48 @@
+name: Build Sherpa-ONNX Android arm64
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            git \
+            cmake \
+            ninja-build \
+            build-essential \
+            unzip \
+            wget
+
+      - name: Download Android NDK r26d
+        run: |
+          wget https://dl.google.com/android/repository/android-ndk-r26d-linux.zip
+          unzip android-ndk-r26d-linux.zip
+          echo "ANDROID_NDK=$PWD/android-ndk-r26d" >> $GITHUB_ENV
+
+      - name: Build sherpa-onnx for arm64-v8a
+        run: |
+          export ANDROID_NDK=$ANDROID_NDK
+          chmod +x ./build-android-arm64-v8a.sh
+          ./build-android-arm64-v8a.sh
+
+      - name: Strip libraries (reduce size)
+        run: |
+          $ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-strip \
+          build-android-arm64-v8a/install/lib/*.so
+
+      - name: Upload .so artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sherpa-onnx-arm64-v8a
+          path: build-android-arm64-v8a/install/lib/
