@@ -1,0 +1,64 @@
+name: Build Sherpa-ONNX Android arm64 custom Package dby
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+            git \
+            cmake \
+            ninja-build \
+            build-essential \
+            unzip \
+            wget
+
+      - name: Download Android NDK r27
+        run: |
+          wget https://dl.google.com/android/repository/android-ndk-r27-linux.zip
+          unzip android-ndk-r27-linux.zip
+          echo "ANDROID_NDK=$PWD/android-ndk-r27" >> $GITHUB_ENV
+          
+      - name: Patch JNI symbol only
+        run: |
+          OLD_JNI="Java_com_k2fsa_sherpa_onnx_"
+          NEW_JNI="Java_dby_maker_sherpaonnx_"
+
+          echo "Replacing JNI symbols..."
+          find . -type f \( -name "*.cc" -o -name "*.cpp" -o -name "*.c" \) -print0 | \
+          xargs -0 sed -i "s/${OLD_JNI}/${NEW_JNI}/g"
+
+          echo "Replacing JNI class path string..."
+          find . -type f \( -name "*.cc" -o -name "*.cpp" -o -name "*.c" \) -print0 | \
+          xargs -0 sed -i "s/com\/k2fsa\/sherpa\/onnx/dby\/maker\/sherpaonnx/g"
+
+          echo "JNI patch complete."
+
+      - name: Build sherpa-onnx for arm64-v8a
+        run: |
+          export ANDROID_NDK=$ANDROID_NDK
+          chmod +x ./build-android-arm64-v8a.sh
+          ./build-android-arm64-v8a.sh
+
+      
+      #- name: Strip libraries (reduce size)
+        #run: |
+          #$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip \
+          #build-android-arm64-v8a/install/lib/*.so
+
+      - name: Upload .so artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sherpa-onnx-arm64-v8a
+          path: build-android-arm64-v8a/install/lib/
