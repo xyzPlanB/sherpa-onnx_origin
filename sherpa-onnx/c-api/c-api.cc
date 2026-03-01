@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <cstring>
 #include <memory>
+#include <sstream>
 #include <string>
-#include <strstream>
 #include <utility>
 #include <vector>
 
@@ -486,6 +486,9 @@ static sherpa_onnx::OfflineRecognizerConfig GetOfflineRecognizerConfig(
   recognizer_config.model_config.moonshine.cached_decoder =
       SHERPA_ONNX_OR(config->model_config.moonshine.cached_decoder, "");
 
+  recognizer_config.model_config.moonshine.merged_decoder =
+      SHERPA_ONNX_OR(config->model_config.moonshine.merged_decoder, "");
+
   recognizer_config.model_config.fire_red_asr.encoder =
       SHERPA_ONNX_OR(config->model_config.fire_red_asr.encoder, "");
 
@@ -549,6 +552,9 @@ static sherpa_onnx::OfflineRecognizerConfig GetOfflineRecognizerConfig(
       SHERPA_ONNX_OR(config->model_config.funasr_nano.top_p, 0.8f);
   recognizer_config.model_config.funasr_nano.seed =
       SHERPA_ONNX_OR(config->model_config.funasr_nano.seed, 42);
+
+  recognizer_config.model_config.fire_red_asr_ctc.model =
+      SHERPA_ONNX_OR(config->model_config.fire_red_asr_ctc.model, "");
 
   recognizer_config.lm_config.model =
       SHERPA_ONNX_OR(config->lm_config.model, "");
@@ -1128,7 +1134,7 @@ struct SherpaOnnxVoiceActivityDetector {
   std::unique_ptr<sherpa_onnx::VoiceActivityDetector> impl;
 };
 
-sherpa_onnx::VadModelConfig GetVadModelConfig(
+static sherpa_onnx::VadModelConfig GetVadModelConfig(
     const SherpaOnnxVadModelConfig *config) {
   sherpa_onnx::VadModelConfig vad_config;
 
@@ -1185,6 +1191,11 @@ sherpa_onnx::VadModelConfig GetVadModelConfig(
 
 const SherpaOnnxVoiceActivityDetector *SherpaOnnxCreateVoiceActivityDetector(
     const SherpaOnnxVadModelConfig *config, float buffer_size_in_seconds) {
+  if (!config) {
+    SHERPA_ONNX_LOGE("vad config is nullptr");
+    return nullptr;
+  }
+
   auto vad_config = GetVadModelConfig(config);
 
   if (!vad_config.Validate()) {
@@ -1206,31 +1217,70 @@ void SherpaOnnxDestroyVoiceActivityDetector(
 
 void SherpaOnnxVoiceActivityDetectorAcceptWaveform(
     const SherpaOnnxVoiceActivityDetector *p, const float *samples, int32_t n) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return;
+  }
+
+  if (!samples) {
+    SHERPA_ONNX_LOGE("samples is nullptr");
+    return;
+  }
+
   p->impl->AcceptWaveform(samples, n);
 }
 
 int32_t SherpaOnnxVoiceActivityDetectorEmpty(
     const SherpaOnnxVoiceActivityDetector *p) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return 1;  // 1 means it is empty
+  }
+
   return p->impl->Empty();
 }
 
 int32_t SherpaOnnxVoiceActivityDetectorDetected(
     const SherpaOnnxVoiceActivityDetector *p) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return 0;
+  }
+
   return p->impl->IsSpeechDetected();
 }
 
 void SherpaOnnxVoiceActivityDetectorPop(
     const SherpaOnnxVoiceActivityDetector *p) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return;
+  }
+
   p->impl->Pop();
 }
 
 void SherpaOnnxVoiceActivityDetectorClear(
     const SherpaOnnxVoiceActivityDetector *p) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return;
+  }
+
   p->impl->Clear();
 }
 
 const SherpaOnnxSpeechSegment *SherpaOnnxVoiceActivityDetectorFront(
     const SherpaOnnxVoiceActivityDetector *p) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return nullptr;
+  }
+
+  if (SherpaOnnxVoiceActivityDetectorEmpty(p)) {
+    return nullptr;
+  }
+
   const sherpa_onnx::SpeechSegment &segment = p->impl->Front();
 
   SherpaOnnxSpeechSegment *ans = new SherpaOnnxSpeechSegment;
@@ -1251,11 +1301,21 @@ void SherpaOnnxDestroySpeechSegment(const SherpaOnnxSpeechSegment *p) {
 
 void SherpaOnnxVoiceActivityDetectorReset(
     const SherpaOnnxVoiceActivityDetector *p) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return;
+  }
+
   p->impl->Reset();
 }
 
 void SherpaOnnxVoiceActivityDetectorFlush(
     const SherpaOnnxVoiceActivityDetector *p) {
+  if (!p) {
+    SHERPA_ONNX_LOGE("vad is nullptr");
+    return;
+  }
+
   p->impl->Flush();
 }
 
@@ -1821,10 +1881,14 @@ const SherpaOnnxWave *SherpaOnnxReadWave(const char *filename) {
 
 const SherpaOnnxWave *SherpaOnnxReadWaveFromBinaryData(const char *data,
                                                        int32_t n) {
+  if (!data || n <= 0) {
+    return nullptr;
+  }
+
   int32_t sample_rate = -1;
   bool is_ok = false;
 
-  std::istrstream is(data, n);
+  std::istringstream is(std::string(data, n));
 
   std::vector<float> samples = sherpa_onnx::ReadWave(is, &sample_rate, &is_ok);
   if (!is_ok) {

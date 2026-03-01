@@ -1,3 +1,47 @@
+## 1.12.28
+
+* Add C++ runtime support for Moonshine v2 (#3232)
+* Export Moonshine v2 models to sherpa-onnx (#3234)
+* Update Python APIs for Moonshine v2 models (#3235)
+* Add Kotlin and Java APIs for Moonshine v2 models (#3237)
+* Add C and C++ API for Moonshine v2 models (#3238)
+* Add Swift API for Moonshine v2 models (#3240)
+* Add JavaScript API (WebAssembly) for Moonshine v2 models (#3241)
+* Add JavaScript API (node-addon) for Moonshine v2 models (#3242)
+* Add C# API for Moonshine v2 (#3243)
+* Add Go API for Moonshine v2 (#3244)
+* Add Dart API for Moonshine v2 (#3245)
+* Add Rust API for Moonshine v2 (#3247)
+* Add Pascal API for Moonshine v2 (#3248)
+* Build huggingface spaces for Moonshine v2 with WebAssembly (#3249)
+
+## 1.12.27
+
+* Add Rust API for VAD (#3213)
+* Replace deprecated std::istrstream with std::istringstream (#3214)
+* Replace deprecated std::wstring_convert with manual UTF-8 codec (#3215)
+* Fix CMake warnings: optional feature message level + policy version minimum (#3217)
+* Upload FireRedASR2 CTC model (#3220)
+* Bump hclust-cpp to 2026-02-25 release and modernize FetchContent (#3216)
+* Support FireRedASR CTC models (#3221)
+* Update language bindings for FireRedASR CTC models (#3224)
+
+## 1.12.26
+
+* Fix CI (#3192)
+* Fix heap-buffer-overflow in ReadWaveImpl when data chunk size is odd (#3195)
+* [PocketTTS] Add seed support and voice embedding caching for consiste… (#3189)
+* Feat/pocket tts cache config (#3200)
+* 3197: enhanced java binding for voice_embedding_cache_capacity (#3201)
+* Dart, flutter, go, c-api blinding and example (#3202)
+* Begin to add Rust API (#3203)
+* Add Rust API for streaming speech recognition (#3204)
+* Add a real-time speech recognition example with microphone for Rust API. (#3205)
+* Add Rust API for offline ASR (#3207)
+* feat: Add PocketTTS cache & seed support to Node.js Addon and WASM APIs (#3206)
+* Add more examples for offline ASR models with Rust API. (#3209)
+* Update C#/Swift/Pascal API for PocketTTS' VoiceEmbeddingCacheCapacity. (#3211)
+
 ## 1.12.25
 
 * Fix building without tts (#3168)

@@ -243,6 +243,9 @@ final class SherpaOnnxOfflineTtsPocketModelConfig extends Struct {
   external Pointer<Utf8> textConditioner;
   external Pointer<Utf8> vocabJson;
   external Pointer<Utf8> tokenScoresJson;
+
+  @Int32()
+  external int voiceEmbeddingCacheCapacity;
 }
 
 final class SherpaOnnxOfflineTtsModelConfig extends Struct {
@@ -352,6 +355,10 @@ final class SherpaOnnxOfflineMedAsrCtcModelConfig extends Struct {
   external Pointer<Utf8> model;
 }
 
+final class SherpaOnnxOfflineFireRedAsrCtcModelConfig extends Struct {
+  external Pointer<Utf8> model;
+}
+
 final class SherpaOnnxOfflineFunAsrNanoModelConfig extends Struct {
   external Pointer<Utf8> encoderAdaptor;
   external Pointer<Utf8> llm;
@@ -411,6 +418,7 @@ final class SherpaOnnxOfflineMoonshineModelConfig extends Struct {
   external Pointer<Utf8> encoder;
   external Pointer<Utf8> uncachedDecoder;
   external Pointer<Utf8> cachedDecoder;
+  external Pointer<Utf8> mergedDecoder;
 }
 
 final class SherpaOnnxOfflineFireRedAsrModelConfig extends Struct {
@@ -469,6 +477,7 @@ final class SherpaOnnxOfflineModelConfig extends Struct {
   external SherpaOnnxOfflineOmnilingualAsrCtcModelConfig omnilingual;
   external SherpaOnnxOfflineMedAsrCtcModelConfig medasr;
   external SherpaOnnxOfflineFunAsrNanoModelConfig funasrNano;
+  external SherpaOnnxOfflineFireRedAsrCtcModelConfig fireRedAsrCtc;
 }
 
 final class SherpaOnnxOfflineRecognizerConfig extends Struct {
