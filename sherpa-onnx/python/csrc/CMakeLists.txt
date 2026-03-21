@@ -29,6 +29,7 @@ set(srcs
   offline-source-separation-spleeter-model-config.cc
   offline-source-separation-uvr-model-config.cc
   offline-source-separation.cc
+  offline-speech-denoiser-dpdfnet-model-config.cc
   offline-speech-denoiser-gtcrn-model-config.cc
   offline-speech-denoiser-model-config.cc
   offline-speech-denoiser.cc
@@ -45,6 +46,7 @@ set(srcs
   online-paraformer-model-config.cc
   online-punctuation.cc
   online-recognizer.cc
+  online-speech-denoiser.cc
   online-stream.cc
   online-t-one-ctc-model-config.cc
   online-transducer-model-config.cc

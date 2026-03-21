@@ -30,8 +30,35 @@ In the following, we demonstrate how to run speech enhancement.
 
 ```bash
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/gtcrn_simple.onnx
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/dpdfnet_baseline.onnx
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/inp_16k.wav
 node ./test-offline-speech-enhancement-gtcrn.js
+node ./test-online-speech-enhancement-gtcrn.js
+```
+
+The GTCRN example files use `gtcrn_simple.onnx`.
+
+DPDFNet has a separate example file. Download DPDFNet models from
+`https://github.com/k2-fsa/sherpa-onnx/releases/tag/speech-enhancement-models`
+or the official Hugging Face hub `https://huggingface.co/Ceva-IP/DPDFNet`
+
+Use 16 kHz DPDFNet models such as `dpdfnet_baseline.onnx`, `dpdfnet2.onnx`,
+`dpdfnet4.onnx`, or `dpdfnet8.onnx` if you want enhanced audio for downstream
+ASR or speech recognition, and use `dpdfnet2_48khz_hr.onnx` if you want 48 kHz
+enhancement output.
+
+```bash
+node ./test-offline-speech-enhancement-dpdfnet.js
+node ./test-online-speech-enhancement-dpdfnet.js
+```
+
+The following four example files are available:
+
+```bash
+node ./test-offline-speech-enhancement-gtcrn.js
+node ./test-offline-speech-enhancement-dpdfnet.js
+node ./test-online-speech-enhancement-gtcrn.js
+node ./test-online-speech-enhancement-dpdfnet.js
 ```
 
 # Speaker diarization
@@ -53,6 +80,24 @@ node ./test-offline-speaker-diarization.js
 # Text-to-speech
 
 In the following, we demonstrate how to run text-to-speech.
+
+## ./test-offline-tts-zipvoice-zh-en.js
+
+[./test-offline-tts-zipvoice-zh-en.js](./test-offline-tts-zipvoice-zh-en.js)
+shows how to use ZipVoice for Zero-shot TTS in Chinese and English.
+
+Please make sure that the reference transcript matches the reference audio.
+
+You can use the following command to run it:
+```bash
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+tar xf sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+rm sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/vocoder-models/vocos_24khz.onnx
+
+node ./test-offline-tts-zipvoice-zh-en.js
+```
 
 ## ./test-offline-tts-pocket-en.js
 

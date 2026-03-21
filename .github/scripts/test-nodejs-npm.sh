@@ -143,14 +143,30 @@ rm -rf sherpa-onnx-dolphin-base-ctc-multi-lang-int8-2025-04-02
 
 # speech enhancement
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/gtcrn_simple.onnx
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/dpdfnet_baseline.onnx
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/inp_16k.wav
 node ./test-offline-speech-enhancement-gtcrn.js
+node ./test-offline-speech-enhancement-dpdfnet.js
+node ./test-online-speech-enhancement-gtcrn.js
+node ./test-online-speech-enhancement-dpdfnet.js
 ls -lh *.wav
 rm gtcrn_simple.onnx
-rm inp_16k.wav
-rm enhanced-16k.wav
+rm dpdfnet_baseline.onnx
+rm -fv inp_16k.wav
+rm -fv enhanced*.wav
 
 # offline tts
+
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+tar xf sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+rm sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/vocoder-models/vocos_24khz.onnx
+
+node ./test-offline-tts-zipvoice-zh-en.js
+ls -lh *.wav
+rm -rf sherpa-onnx-zipvoice-distill-int8-zh-en-emilia
+rm -f vocos_24khz.onnx
 
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2
 tar xf kokoro-multi-lang-v1_0.tar.bz2

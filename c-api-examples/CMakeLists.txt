@@ -10,6 +10,17 @@ target_link_libraries(kws-c-api sherpa-onnx-c-api)
 add_executable(speech-enhancement-gtcrn-c-api speech-enhancement-gtcrn-c-api.c)
 target_link_libraries(speech-enhancement-gtcrn-c-api sherpa-onnx-c-api)
 
+add_executable(speech-enhancement-dpdfnet-c-api speech-enhancement-dpdfnet-c-api.c)
+target_link_libraries(speech-enhancement-dpdfnet-c-api sherpa-onnx-c-api)
+
+add_executable(online-speech-enhancement-gtcrn-c-api
+               online-speech-enhancement-gtcrn-c-api.c)
+target_link_libraries(online-speech-enhancement-gtcrn-c-api sherpa-onnx-c-api)
+
+add_executable(online-speech-enhancement-dpdfnet-c-api
+               online-speech-enhancement-dpdfnet-c-api.c)
+target_link_libraries(online-speech-enhancement-dpdfnet-c-api sherpa-onnx-c-api)
+
 if(SHERPA_ONNX_ENABLE_TTS)
   add_executable(offline-tts-c-api offline-tts-c-api.c)
   target_link_libraries(offline-tts-c-api sherpa-onnx-c-api cargs)
@@ -34,6 +45,9 @@ if(SHERPA_ONNX_ENABLE_TTS)
 
   add_executable(supertonic-tts-en-c-api supertonic-tts-en-c-api.c)
   target_link_libraries(supertonic-tts-en-c-api sherpa-onnx-c-api)
+
+  add_executable(zipvoice-tts-zh-en-c-api zipvoice-tts-zh-en-c-api.c)
+  target_link_libraries(zipvoice-tts-zh-en-c-api sherpa-onnx-c-api)
 endif()
 
 if(SHERPA_ONNX_ENABLE_SPEAKER_DIARIZATION)
@@ -58,6 +72,9 @@ target_link_libraries(audio-tagging-c-api sherpa-onnx-c-api)
 
 add_executable(add-punctuation-c-api add-punctuation-c-api.c)
 target_link_libraries(add-punctuation-c-api sherpa-onnx-c-api)
+
+add_executable(add-punctuation-online-c-api add-punctuation-online-c-api.c)
+target_link_libraries(add-punctuation-online-c-api sherpa-onnx-c-api)
 
 add_executable(whisper-c-api whisper-c-api.c)
 target_link_libraries(whisper-c-api sherpa-onnx-c-api)

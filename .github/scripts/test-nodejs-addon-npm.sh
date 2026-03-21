@@ -40,6 +40,20 @@ node ./test_tts_non_streaming_pocket_en_async.js
 
 rm -rf sherpa-onnx-pocket-tts-int8-2026-01-26
 
+echo "----------ZipVoice----------"
+
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+tar xf sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+rm sherpa-onnx-zipvoice-distill-int8-zh-en-emilia.tar.bz2
+
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/vocoder-models/vocos_24khz.onnx
+
+node ./test_tts_non_streaming_zipvoice_zh_en.js
+node ./test_tts_non_streaming_zipvoice_zh_en_async.js
+
+rm -rf sherpa-onnx-zipvoice-distill-int8-zh-en-emilia
+rm -f vocos_24khz.onnx
+
 echo "----------non-streaming ASR FunASR Nano----------"
 
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-funasr-nano-int8-2025-12-30.tar.bz2
@@ -150,10 +164,15 @@ rm -rf sherpa-onnx-dolphin-base-ctc-multi-lang-int8-2025-04-02
 echo "----------non-streaming speech denoiser----------"
 
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/gtcrn_simple.onnx
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/dpdfnet_baseline.onnx
 curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/speech-enhancement-models/inp_16k.wav
 
 node ./test_offline_speech_enhancement_gtcrn.js
+node ./test_offline_speech_enhancement_dpdfnet.js
+node ./test_online_speech_enhancement_gtcrn.js
+node ./test_online_speech_enhancement_dpdfnet.js
 rm gtcrn_simple.onnx
+rm dpdfnet_baseline.onnx
 ls -lh *.wav
 
 echo "----------non-streaming asr FireRedAsr----------"

@@ -74,6 +74,12 @@ cd ../pocket-tts-zero-shot
 ls -lh
 rm -rf sherpa-onnx-pocket-*
 
+cd ../zipvoice-tts
+./run.sh
+ls -lh
+rm -rf sherpa-onnx-zipvoice-*
+rm -f vocos_24khz.onnx
+
 cd ../vad-non-streaming-funasr-nano
 ./run-ten-vad.sh
 rm -fv *.onnx
@@ -119,6 +125,18 @@ cd ../speech-enhancement-gtcrn
 ./run.sh
 ls -lh
 
+cd ../speech-enhancement-dpdfnet
+./run.sh
+ls -lh
+
+cd ../streaming-speech-enhancement-gtcrn
+./run.sh
+ls -lh
+
+cd ../streaming-speech-enhancement-dpdfnet
+./run.sh
+ls -lh
+
 cd ../kokoro-tts
 ./run-kokoro.sh
 ls -lh
@@ -143,6 +161,7 @@ mkdir tts
 cp -v dotnet-examples/kokoro-tts/*.wav ./tts
 cp -v dotnet-examples/offline-tts/*.wav ./tts
 cp -v dotnet-examples/supertonic-tts/*.wav ./tts
+cp -v dotnet-examples/zipvoice-tts/*.wav ./tts
 popd
 
 cd ../offline-speaker-diarization

@@ -9,6 +9,19 @@ target_link_libraries(streaming-zipformer-with-hr-cxx-api sherpa-onnx-cxx-api)
 add_executable(speech-enhancement-gtcrn-cxx-api ./speech-enhancement-gtcrn-cxx-api.cc)
 target_link_libraries(speech-enhancement-gtcrn-cxx-api sherpa-onnx-cxx-api)
 
+add_executable(speech-enhancement-dpdfnet-cxx-api ./speech-enhancement-dpdfnet-cxx-api.cc)
+target_link_libraries(speech-enhancement-dpdfnet-cxx-api sherpa-onnx-cxx-api)
+
+add_executable(online-speech-enhancement-gtcrn-cxx-api
+               ./online-speech-enhancement-gtcrn-cxx-api.cc)
+target_link_libraries(online-speech-enhancement-gtcrn-cxx-api
+                      sherpa-onnx-cxx-api)
+
+add_executable(online-speech-enhancement-dpdfnet-cxx-api
+               ./online-speech-enhancement-dpdfnet-cxx-api.cc)
+target_link_libraries(online-speech-enhancement-dpdfnet-cxx-api
+                      sherpa-onnx-cxx-api)
+
 add_executable(kws-cxx-api ./kws-cxx-api.cc)
 target_link_libraries(kws-cxx-api sherpa-onnx-cxx-api)
 
@@ -194,4 +207,7 @@ if(SHERPA_ONNX_ENABLE_TTS)
 
   add_executable(supertonic-tts-en-cxx-api ./supertonic-tts-en-cxx-api.cc)
   target_link_libraries(supertonic-tts-en-cxx-api sherpa-onnx-cxx-api)
+
+  add_executable(zipvoice-tts-zh-en-cxx-api ./zipvoice-tts-zh-en-cxx-api.cc)
+  target_link_libraries(zipvoice-tts-zh-en-cxx-api sherpa-onnx-cxx-api)
 endif()

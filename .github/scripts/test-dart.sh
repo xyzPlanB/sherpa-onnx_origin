@@ -4,6 +4,30 @@ set -ex
 
 cd dart-api-examples
 
+pushd speech-enhancement-gtcrn
+echo "speech enhancement with gtcrn models"
+./run.sh
+ls -lh
+popd
+
+pushd speech-enhancement-dpdfnet
+echo "speech enhancement with dpdfnet models"
+./run.sh
+ls -lh
+popd
+
+pushd streaming-speech-enhancement-gtcrn
+echo "streaming speech enhancement with gtcrn models"
+./run.sh
+ls -lh
+popd
+
+pushd streaming-speech-enhancement-dpdfnet
+echo "streaming speech enhancement with dpdfnet models"
+./run.sh
+ls -lh
+popd
+
 pushd non-streaming-asr
 
 echo '----------Moonshine v2----------'
@@ -94,8 +118,10 @@ echo '----------tts----------'
 ./run-kokoro-en.sh
 ./run-matcha-zh.sh
 ./run-matcha-en.sh
+./run-zipvoice-zh-en.sh
 ls -lh *.wav
 rm -rf matcha-icefall-*
+rm -rf sherpa-onnx-zipvoice-*
 rm *.onnx
 
 echo '----------piper tts----------'
@@ -152,12 +178,6 @@ pushd vad
 ./run-ten-vad.sh
 ./run.sh
 rm *.onnx
-popd
-
-pushd speech-enhancement-gtcrn
-echo "speech enhancement with gtcrn models"
-./run.sh
-ls -lh
 popd
 
 pushd speaker-diarization

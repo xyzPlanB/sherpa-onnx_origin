@@ -14,6 +14,17 @@
 
 namespace sherpa_onnx::cxx {
 
+static void FillSpeechDenoiserModelConfig(
+    const OfflineSpeechDenoiserModelConfig &src,
+    SherpaOnnxOfflineSpeechDenoiserModelConfig *dst) {
+  memset(dst, 0, sizeof(*dst));
+  dst->gtcrn.model = src.gtcrn.model.c_str();
+  dst->dpdfnet.model = src.dpdfnet.model.c_str();
+  dst->num_threads = src.num_threads;
+  dst->provider = src.provider.c_str();
+  dst->debug = src.debug;
+}
+
 Wave ReadWave(const std::string &filename) {
   auto p = SherpaOnnxReadWave(filename.c_str());
 
@@ -49,6 +60,18 @@ void OnlineStream::AcceptWaveform(int32_t sample_rate, const float *samples,
 
 void OnlineStream::InputFinished() const {
   SherpaOnnxOnlineStreamInputFinished(p_);
+}
+
+void OnlineStream::SetOption(const char *key, const char *value) const {
+  SherpaOnnxOnlineStreamSetOption(p_, key, value);
+}
+
+const char *OnlineStream::GetOption(const char *key) const {
+  return SherpaOnnxOnlineStreamGetOption(p_, key);
+}
+
+int32_t OnlineStream::HasOption(const char *key) const {
+  return SherpaOnnxOnlineStreamHasOption(p_, key);
 }
 
 OnlineRecognizer OnlineRecognizer::Create(
@@ -198,6 +221,18 @@ void OfflineStream::Destroy(const SherpaOnnxOfflineStream *p) const {
 void OfflineStream::AcceptWaveform(int32_t sample_rate, const float *samples,
                                    int32_t n) const {
   SherpaOnnxAcceptWaveformOffline(p_, sample_rate, samples, n);
+}
+
+void OfflineStream::SetOption(const char *key, const char *value) const {
+  SherpaOnnxOfflineStreamSetOption(p_, key, value);
+}
+
+const char *OfflineStream::GetOption(const char *key) const {
+  return SherpaOnnxOfflineStreamGetOption(p_, key);
+}
+
+int32_t OfflineStream::HasOption(const char *key) const {
+  return SherpaOnnxOfflineStreamHasOption(p_, key);
 }
 
 static SherpaOnnxOfflineRecognizerConfig Convert(
@@ -717,13 +752,7 @@ void KeywordSpotter::Reset(const OnlineStream *s) const {
 OfflineSpeechDenoiser OfflineSpeechDenoiser::Create(
     const OfflineSpeechDenoiserConfig &config) {
   struct SherpaOnnxOfflineSpeechDenoiserConfig c;
-  memset(&c, 0, sizeof(c));
-
-  c.model.gtcrn.model = config.model.gtcrn.model.c_str();
-
-  c.model.num_threads = config.model.num_threads;
-  c.model.provider = config.model.provider.c_str();
-  c.model.debug = config.model.debug;
+  FillSpeechDenoiserModelConfig(config.model, &c.model);
 
   auto p = SherpaOnnxCreateOfflineSpeechDenoiser(&c);
 
@@ -742,6 +771,9 @@ OfflineSpeechDenoiser::OfflineSpeechDenoiser(
 DenoisedAudio OfflineSpeechDenoiser::Run(const float *samples, int32_t n,
                                          int32_t sample_rate) const {
   auto audio = SherpaOnnxOfflineSpeechDenoiserRun(p_, samples, n, sample_rate);
+  if (audio == nullptr) {
+    return {};
+  }
 
   DenoisedAudio ans;
   ans.samples = {audio->samples, audio->samples + audio->n};
@@ -753,6 +785,63 @@ DenoisedAudio OfflineSpeechDenoiser::Run(const float *samples, int32_t n,
 
 int32_t OfflineSpeechDenoiser::GetSampleRate() const {
   return SherpaOnnxOfflineSpeechDenoiserGetSampleRate(p_);
+}
+
+OnlineSpeechDenoiser OnlineSpeechDenoiser::Create(
+    const OnlineSpeechDenoiserConfig &config) {
+  struct SherpaOnnxOnlineSpeechDenoiserConfig c;
+  FillSpeechDenoiserModelConfig(config.model, &c.model);
+
+  auto p = SherpaOnnxCreateOnlineSpeechDenoiser(&c);
+  return OnlineSpeechDenoiser(p);
+}
+
+void OnlineSpeechDenoiser::Destroy(
+    const SherpaOnnxOnlineSpeechDenoiser *p) const {
+  SherpaOnnxDestroyOnlineSpeechDenoiser(p);
+}
+
+OnlineSpeechDenoiser::OnlineSpeechDenoiser(
+    const SherpaOnnxOnlineSpeechDenoiser *p)
+    : MoveOnly<OnlineSpeechDenoiser, SherpaOnnxOnlineSpeechDenoiser>(p) {}
+
+DenoisedAudio OnlineSpeechDenoiser::Run(const float *samples, int32_t n,
+                                        int32_t sample_rate) const {
+  auto audio = SherpaOnnxOnlineSpeechDenoiserRun(p_, samples, n, sample_rate);
+  if (audio == nullptr) {
+    return {};
+  }
+
+  DenoisedAudio ans;
+  ans.samples = {audio->samples, audio->samples + audio->n};
+  ans.sample_rate = audio->sample_rate;
+  SherpaOnnxDestroyDenoisedAudio(audio);
+  return ans;
+}
+
+DenoisedAudio OnlineSpeechDenoiser::Flush() const {
+  auto audio = SherpaOnnxOnlineSpeechDenoiserFlush(p_);
+  if (audio == nullptr) {
+    return {};
+  }
+
+  DenoisedAudio ans;
+  ans.samples = {audio->samples, audio->samples + audio->n};
+  ans.sample_rate = audio->sample_rate;
+  SherpaOnnxDestroyDenoisedAudio(audio);
+  return ans;
+}
+
+void OnlineSpeechDenoiser::Reset() const {
+  SherpaOnnxOnlineSpeechDenoiserReset(p_);
+}
+
+int32_t OnlineSpeechDenoiser::GetSampleRate() const {
+  return SherpaOnnxOnlineSpeechDenoiserGetSampleRate(p_);
+}
+
+int32_t OnlineSpeechDenoiser::GetFrameShiftInSamples() const {
+  return SherpaOnnxOnlineSpeechDenoiserGetFrameShiftInSamples(p_);
 }
 
 CircularBuffer CircularBuffer::Create(int32_t capacity) {

@@ -69,7 +69,7 @@ This repository supports running the following functions **locally**
   - Spoken language identification
   - Audio tagging
   - VAD (e.g., [silero-vad][silero-vad])
-  - Speech enhancement (e.g., [gtcrn][gtcrn])
+  - Speech enhancement (e.g., [gtcrn][gtcrn], [DPDFNet](https://github.com/ceva-ip/DPDFNet))
   - Keyword spotting
   - Source separation (e.g., [spleeter][spleeter], [UVR][UVR])
 
@@ -144,6 +144,8 @@ We also have spaces built using WebAssembly. They are listed below:
 |Speech synthesis (Matcha, English)                                                                  |[Click me][wasm-hf-tts-matcha-en]| [地址][wasm-ms-tts-matcha-en]|
 |Speech synthesis (Matcha, Chinese+English)                                                          |[Click me][wasm-hf-tts-matcha-zh-en]| [地址][wasm-ms-tts-matcha-zh-en]|
 |Speaker diarization                                                                         |[Click me][wasm-hf-speaker-diarization]|[地址][wasm-ms-speaker-diarization]|
+|Voice cloning with ZipVoice (Chinese+English)                                               |[Click me][wasm-hf-voice-cloning-zipvoice]|[地址][wasm-ms-voice-cloning-zipvoice]|
+|Voice cloning with Pocket TTS (English)                                               |[Click me][wasm-hf-voice-cloning-pocket]|[地址][wasm-ms-voice-cloning-pocket]|
 
 </details>
 
@@ -427,6 +429,14 @@ Example [a chat box agent](https://github.com/SamYuan1990/i18n-agent-action)
 
 a multimodal chatbot based on go with sherpa-onnx's speech lib api.
 
+### [fcitx5-vinput](https://github.com/xifan2333/fcitx5-vinput)
+
+Local offline voice input plugin for [Fcitx5](https://github.com/fcitx/fcitx5) (Linux input method framework).
+It uses C++ with offline ASR for speech recognition, supporting push-to-talk,
+command mode, and optional LLM post-processing.
+
+Video demo in Chinese: [fcitx5-vinput](https://www.bilibili.com/video/BV1a6cUzVE6F)
+
 [silero-vad]: https://github.com/snakers4/silero-vad
 [Raspberry Pi]: https://www.raspberrypi.com/
 [RV1126]: https://www.rock-chips.com/uploads/pdf/2022.8.26/191/RV1126%20Brief%20Datasheet.pdf
@@ -504,6 +514,10 @@ a multimodal chatbot based on go with sherpa-onnx's speech lib api.
 [wasm-ms-tts-piper-de]: https://modelscope.cn/studios/k2-fsa/web-assembly-tts-sherpa-onnx-de
 [wasm-hf-speaker-diarization]: https://huggingface.co/spaces/k2-fsa/web-assembly-speaker-diarization-sherpa-onnx
 [wasm-ms-speaker-diarization]: https://www.modelscope.cn/studios/csukuangfj/web-assembly-speaker-diarization-sherpa-onnx
+[wasm-hf-voice-cloning-zipvoice]: https://huggingface.co/spaces/k2-fsa/web-assembly-zh-en-tts-zipvoice
+[wasm-ms-voice-cloning-zipvoice]: https://modelscope.cn/studios/csukuangfj/web-assembly-zh-en-tts-zipvoice
+[wasm-hf-voice-cloning-pocket]: https://huggingface.co/spaces/k2-fsa/web-assembly-en-tts-pocket
+[wasm-ms-voice-cloning-pocket]: https://modelscope.cn/studios/csukuangfj/web-assembly-en-tts-pocket
 [apk-speaker-diarization]: https://k2-fsa.github.io/sherpa/onnx/speaker-diarization/apk.html
 [apk-speaker-diarization-cn]: https://k2-fsa.github.io/sherpa/onnx/speaker-diarization/apk-cn.html
 [apk-streaming-asr]: https://k2-fsa.github.io/sherpa/onnx/android/apk.html

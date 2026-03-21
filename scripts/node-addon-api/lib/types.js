@@ -52,7 +52,7 @@
 
 /**
  * @typedef {Object} OfflinePunctuationHandle
- * @see src/punctuation.cc
+ * @see src/offline-punctuation.cc
  */
 
 /**
@@ -502,6 +502,20 @@
  */
 
 /**
+ * @typedef {Object} OfflineTtsZipvoiceModelConfig
+ * @property {string} [tokens]
+ * @property {string} [encoder]
+ * @property {string} [decoder]
+ * @property {string} [vocoder]
+ * @property {string} [dataDir]
+ * @property {string} [lexicon]
+ * @property {number} [featScale]
+ * @property {number} [tShift]
+ * @property {number} [targetRms]
+ * @property {number} [guidanceScale]
+ */
+
+/**
  * @typedef {Object} OfflineTtsPocketModelConfig
  * @property {string} [lmFlow]
  * @property {string} [lmMain]
@@ -520,6 +534,7 @@
  * @property {OfflineTtsMatchaModelConfig} [matcha]
  * @property {OfflineTtsKokoroModelConfig} [kokoro]
  * @property {OfflineTtsKittenModelConfig} [kitten]
+ * @property {OfflineTtsZipvoiceModelConfig} [zipvoice]
  * @property {OfflineTtsPocketModelConfig} [pocket]
  */
 
@@ -541,16 +556,30 @@
 
 /**
  * Offline Speech Denoiser model config
+ * @typedef {Object} OfflineSpeechDenoiserDpdfNetModelConfig
+ * @property {string} [model]
+ */
+
+/**
+ * Offline Speech Denoiser model config
  * @typedef {Object} OfflineSpeechDenoiserModelConfig
  * @property {OfflineSpeechDenoiserGtcrnModelConfig} [gtcrn]
+ * @property {OfflineSpeechDenoiserDpdfNetModelConfig} [dpdfnet]
+ * @property {number} [numThreads]
+ * @property {boolean|number} [debug]
+ * @property {string} [provider]
  */
 
 /**
  * Offline Speech Denoiser configuration (partial).
  * @typedef {Object} OfflineSpeechDenoiserConfig
  * @property {OfflineSpeechDenoiserModelConfig} [model]
- * @property {number} [numThreads]
- * @property {string} [provider]
+ */
+
+/**
+ * Online Speech Denoiser configuration (partial).
+ * @typedef {Object} OnlineSpeechDenoiserConfig
+ * @property {OfflineSpeechDenoiserModelConfig} [model]
  */
 
 /**
