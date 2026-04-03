@@ -34,7 +34,7 @@ jobs:
         run: |
           export SHERPA_ONNX_ANDROID_PLATFORM=android-29
           export ANDROID_NDK=$ANDROID_NDK
-          export BUILD_SHARED_LIBS=OFF
+          
           chmod +x ./build-android-arm64-v8a.sh
           ./build-android-arm64-v8a.sh
 
