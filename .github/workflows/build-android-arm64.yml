@@ -33,7 +33,7 @@ jobs:
       - name: Build sherpa-onnx for arm64-v8a
         run: |
           export BUILD_SHARED_LIBS=OFF
-          export SHERPA_ONNX_ANDROID_PLATFORM=android-28
+          export SHERPA_ONNX_ANDROID_PLATFORM=android-26
           export ANDROID_NDK=$ANDROID_NDK
           
           chmod +x ./build-android-arm64-v8a.sh
