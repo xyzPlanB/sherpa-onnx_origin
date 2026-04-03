@@ -55,6 +55,7 @@ jobs:
         shell: bash
         run: |
           export BUILD_SHARED_LIBS=OFF
+          export SHERPA_ONNX_ANDROID_PLATFORM=android-29
 
           export CMAKE_CXX_COMPILER_LAUNCHER=ccache
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -81,13 +82,3 @@ jobs:
         with:
           name: sherpa-onnx-android-libs-static
           path: ./jniLibs
-
-      - name: Release android libs
-        if: (github.repository_owner == 'csukuangfj' || github.repository_owner == 'k2-fsa') && github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-        uses: svenstaro/upload-release-action@v2
-        with:
-          file_glob: true
-          overwrite: true
-          file: sherpa-onnx-*-android*.tar.bz2
-
-  
