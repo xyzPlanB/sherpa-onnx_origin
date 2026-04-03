@@ -310,6 +310,17 @@ static SherpaOnnxOfflineRecognizerConfig Convert(
   c.model_config.canary.tgt_lang = config.model_config.canary.tgt_lang.c_str();
   c.model_config.canary.use_pnc = config.model_config.canary.use_pnc;
 
+  c.model_config.cohere_transcribe.encoder =
+      config.model_config.cohere_transcribe.encoder.c_str();
+  c.model_config.cohere_transcribe.decoder =
+      config.model_config.cohere_transcribe.decoder.c_str();
+  c.model_config.cohere_transcribe.language =
+      config.model_config.cohere_transcribe.language.c_str();
+  c.model_config.cohere_transcribe.use_punct =
+      config.model_config.cohere_transcribe.use_punct;
+  c.model_config.cohere_transcribe.use_itn =
+      config.model_config.cohere_transcribe.use_itn;
+
   c.model_config.wenet_ctc.model = config.model_config.wenet_ctc.model.c_str();
 
   c.model_config.omnilingual.model =
@@ -337,6 +348,26 @@ static SherpaOnnxOfflineRecognizerConfig Convert(
   c.model_config.funasr_nano.itn = config.model_config.funasr_nano.itn ? 1 : 0;
   c.model_config.funasr_nano.hotwords =
       config.model_config.funasr_nano.hotwords.c_str();
+
+  c.model_config.qwen3_asr.conv_frontend =
+      config.model_config.qwen3_asr.conv_frontend.c_str();
+  c.model_config.qwen3_asr.encoder =
+      config.model_config.qwen3_asr.encoder.c_str();
+  c.model_config.qwen3_asr.decoder =
+      config.model_config.qwen3_asr.decoder.c_str();
+  c.model_config.qwen3_asr.tokenizer =
+      config.model_config.qwen3_asr.tokenizer.c_str();
+  c.model_config.qwen3_asr.hotwords =
+      config.model_config.qwen3_asr.hotwords.c_str();
+  c.model_config.qwen3_asr.max_total_len =
+      config.model_config.qwen3_asr.max_total_len;
+  c.model_config.qwen3_asr.max_new_tokens =
+      config.model_config.qwen3_asr.max_new_tokens;
+  c.model_config.qwen3_asr.temperature =
+      config.model_config.qwen3_asr.temperature;
+  c.model_config.qwen3_asr.top_p = config.model_config.qwen3_asr.top_p;
+  c.model_config.qwen3_asr.seed = config.model_config.qwen3_asr.seed;
+
   c.model_config.medasr.model = config.model_config.medasr.model.c_str();
 
   c.model_config.fire_red_asr_ctc.model =
@@ -553,13 +584,14 @@ GeneratedAudio OfflineTts::Generate(const std::string &text,
                                     int32_t sid /*= 0*/, float speed /*= 1.0*/,
                                     OfflineTtsCallback callback /*= nullptr*/,
                                     void *arg /*= nullptr*/) const {
-  const SherpaOnnxGeneratedAudio *audio;
-  if (!callback) {
-    audio = SherpaOnnxOfflineTtsGenerate(p_, text.c_str(), sid, speed);
-  } else {
-    audio = SherpaOnnxOfflineTtsGenerateWithProgressCallbackWithArg(
-        p_, text.c_str(), sid, speed, callback, arg);
-  }
+  SherpaOnnxGenerationConfig c;
+  memset(&c, 0, sizeof(c));
+  c.sid = sid;
+  c.speed = speed;
+
+  const SherpaOnnxGeneratedAudio *audio =
+      SherpaOnnxOfflineTtsGenerateWithConfig(p_, text.c_str(), &c, callback,
+                                             arg);
 
   GeneratedAudio ans;
 
@@ -1135,6 +1167,74 @@ std::shared_ptr<std::vector<AudioEvent>> AudioTagging::ComputePtr(
     const OfflineStream *s, int32_t top_k /*= -1*/) {
   auto events = Compute(s, top_k);
   return std::make_shared<std::vector<AudioEvent>>(events);
+}
+
+// ============================================================
+// For Source Separation
+// ============================================================
+
+static void FillSourceSeparationModelConfig(
+    const OfflineSourceSeparationModelConfig &src,
+    SherpaOnnxOfflineSourceSeparationModelConfig *dst) {
+  memset(dst, 0, sizeof(*dst));
+  dst->spleeter.vocals = src.spleeter.vocals.c_str();
+  dst->spleeter.accompaniment = src.spleeter.accompaniment.c_str();
+  dst->uvr.model = src.uvr.model.c_str();
+  dst->num_threads = src.num_threads;
+  dst->provider = src.provider.c_str();
+  dst->debug = src.debug;
+}
+
+OfflineSourceSeparation OfflineSourceSeparation::Create(
+    const OfflineSourceSeparationConfig &config) {
+  struct SherpaOnnxOfflineSourceSeparationConfig c;
+  memset(&c, 0, sizeof(c));
+  FillSourceSeparationModelConfig(config.model, &c.model);
+
+  auto p = SherpaOnnxCreateOfflineSourceSeparation(&c);
+  return OfflineSourceSeparation(p);
+}
+
+void OfflineSourceSeparation::Destroy(
+    const SherpaOnnxOfflineSourceSeparation *p) const {
+  SherpaOnnxDestroyOfflineSourceSeparation(p);
+}
+
+OfflineSourceSeparation::OfflineSourceSeparation(
+    const SherpaOnnxOfflineSourceSeparation *p)
+    : MoveOnly<OfflineSourceSeparation, SherpaOnnxOfflineSourceSeparation>(p) {}
+
+SourceSeparationOutput OfflineSourceSeparation::Process(
+    const float *const *samples, int32_t num_channels, int32_t num_samples,
+    int32_t sample_rate) const {
+  auto output = SherpaOnnxOfflineSourceSeparationProcess(
+      p_, samples, num_channels, num_samples, sample_rate);
+  if (output == nullptr) {
+    return {};
+  }
+
+  SourceSeparationOutput ans;
+  ans.sample_rate = output->sample_rate;
+  ans.stems.resize(output->num_stems);
+  for (int32_t s = 0; s < output->num_stems; ++s) {
+    auto &stem = ans.stems[s];
+    auto &c_stem = output->stems[s];
+    stem.samples.resize(c_stem.num_channels);
+    for (int32_t c = 0; c < c_stem.num_channels; ++c) {
+      stem.samples[c] = {c_stem.samples[c], c_stem.samples[c] + c_stem.n};
+    }
+  }
+
+  SherpaOnnxDestroySourceSeparationOutput(output);
+  return ans;
+}
+
+int32_t OfflineSourceSeparation::GetOutputSampleRate() const {
+  return SherpaOnnxOfflineSourceSeparationGetOutputSampleRate(p_);
+}
+
+int32_t OfflineSourceSeparation::GetNumberOfStems() const {
+  return SherpaOnnxOfflineSourceSeparationGetNumberOfStems(p_);
 }
 
 }  // namespace sherpa_onnx::cxx

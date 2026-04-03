@@ -4,7 +4,40 @@ set -ex
 
 cd dotnet-examples/
 
-cd ./supertonic-tts
+cd ./non-streaming-cohere-transcribe-decode-files
+./run.sh
+ls -lh
+rm -rf sherpa-onnx-cohere-transcribe-*
+
+cd ..
+
+if [[ "$SKIP_QWEN3" != "true" ]]; then
+  cd ./vad-non-streaming-qwen3-asr
+  ./run-ten-vad.sh
+  rm -fv *.onnx
+
+  ./run.sh
+  rm -fv *.onnx
+
+  cd ../non-streaming-qwen3-asr-decode-files
+  ./run.sh
+  ls -lh
+  rm -rf sherpa-onnx-qwen3-*
+
+  cd ..
+fi
+
+cd ./source-separation-spleeter
+./run.sh
+ls -lh
+rm -rf sherpa-onnx-spleeter-*
+
+cd ../source-separation-uvr
+./run.sh
+ls -lh
+rm -f UVR-MDX-NET-Voc_FT.onnx
+
+cd ../supertonic-tts
 ./run.sh
 ls -lh
 rm -rf sherpa-onnx-supertonic-*
@@ -192,6 +225,10 @@ rm -rf sherpa-onnx-*
 cd ../offline-punctuation
 ./run.sh
 rm -rf sherpa-onnx-*
+
+cd ../online-punctuation
+./run.sh
+rm -rf sherpa-onnx-online-punct-en-2024-08-06
 
 cd ../speaker-identification
 ./run.sh

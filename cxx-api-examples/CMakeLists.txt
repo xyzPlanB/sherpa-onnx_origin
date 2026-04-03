@@ -9,6 +9,12 @@ target_link_libraries(streaming-zipformer-with-hr-cxx-api sherpa-onnx-cxx-api)
 add_executable(speech-enhancement-gtcrn-cxx-api ./speech-enhancement-gtcrn-cxx-api.cc)
 target_link_libraries(speech-enhancement-gtcrn-cxx-api sherpa-onnx-cxx-api)
 
+add_executable(source-separation-spleeter-cxx-api ./source-separation-spleeter-cxx-api.cc)
+target_link_libraries(source-separation-spleeter-cxx-api sherpa-onnx-cxx-api)
+
+add_executable(source-separation-uvr-cxx-api ./source-separation-uvr-cxx-api.cc)
+target_link_libraries(source-separation-uvr-cxx-api sherpa-onnx-cxx-api)
+
 add_executable(speech-enhancement-dpdfnet-cxx-api ./speech-enhancement-dpdfnet-cxx-api.cc)
 target_link_libraries(speech-enhancement-dpdfnet-cxx-api sherpa-onnx-cxx-api)
 
@@ -66,6 +72,9 @@ target_link_libraries(medasr-ctc-cxx-api sherpa-onnx-cxx-api)
 
 add_executable(nemo-canary-cxx-api ./nemo-canary-cxx-api.cc)
 target_link_libraries(nemo-canary-cxx-api sherpa-onnx-cxx-api)
+
+add_executable(cohere-transcribe-cxx-api ./cohere-transcribe-cxx-api.cc)
+target_link_libraries(cohere-transcribe-cxx-api sherpa-onnx-cxx-api)
 
 add_executable(offline-punctuation-cxx-api ./offline-punctuation-cxx-api.cc)
 target_link_libraries(offline-punctuation-cxx-api sherpa-onnx-cxx-api)
@@ -185,6 +194,9 @@ target_link_libraries(vad-cxx-api sherpa-onnx-cxx-api)
 
 add_executable(funasr-nano-cxx-api ./funasr-nano-cxx-api.cc)
 target_link_libraries(funasr-nano-cxx-api sherpa-onnx-cxx-api)
+
+add_executable(qwen3-asr-cxx-api ./qwen3-asr-cxx-api.cc)
+target_link_libraries(qwen3-asr-cxx-api sherpa-onnx-cxx-api)
 
 if(SHERPA_ONNX_ENABLE_TTS)
   add_executable(matcha-tts-zh-cxx-api ./matcha-tts-zh-cxx-api.cc)

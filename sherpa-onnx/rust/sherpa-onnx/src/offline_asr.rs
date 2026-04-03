@@ -321,6 +321,74 @@ impl OfflineFireRedAsrCtcModelConfig {
 }
 
 #[derive(Clone, Debug)]
+/// Offline Qwen3 ASR model configuration.
+pub struct OfflineQwen3ASRModelConfig {
+    pub conv_frontend: Option<String>,
+    pub encoder: Option<String>,
+    pub decoder: Option<String>,
+    pub tokenizer: Option<String>,
+    pub max_total_len: i32,
+    pub max_new_tokens: i32,
+    pub temperature: f32,
+    pub top_p: f32,
+    pub seed: i32,
+    pub hotwords: Option<String>,
+}
+impl Default for OfflineQwen3ASRModelConfig {
+    fn default() -> Self {
+        Self {
+            conv_frontend: None,
+            encoder: None,
+            decoder: None,
+            tokenizer: None,
+            max_total_len: 512,
+            max_new_tokens: 128,
+            temperature: 1e-6,
+            top_p: 0.8,
+            seed: 42,
+            hotwords: None,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Default)]
+/// Offline Cohere Transcribe model configuration.
+pub struct OfflineCohereTranscribeModelConfig {
+    pub encoder: Option<String>,
+    pub decoder: Option<String>,
+    pub language: Option<String>,
+    pub use_punct: bool,
+    pub use_itn: bool,
+}
+
+impl OfflineCohereTranscribeModelConfig {
+    fn to_sys(&self, cstrings: &mut Vec<CString>) -> sys::OfflineCohereTranscribeModelConfig {
+        sys::OfflineCohereTranscribeModelConfig {
+            encoder: to_c_ptr(&self.encoder, cstrings),
+            decoder: to_c_ptr(&self.decoder, cstrings),
+            language: to_c_ptr(&self.language, cstrings),
+            use_punct: self.use_punct as i32,
+            use_itn: self.use_itn as i32,
+        }
+    }
+}
+impl OfflineQwen3ASRModelConfig {
+    fn to_sys(&self, cstrings: &mut Vec<CString>) -> sys::OfflineQwen3ASRModelConfig {
+        sys::OfflineQwen3ASRModelConfig {
+            conv_frontend: to_c_ptr(&self.conv_frontend, cstrings),
+            encoder: to_c_ptr(&self.encoder, cstrings),
+            decoder: to_c_ptr(&self.decoder, cstrings),
+            tokenizer: to_c_ptr(&self.tokenizer, cstrings),
+            max_total_len: self.max_total_len,
+            max_new_tokens: self.max_new_tokens,
+            temperature: self.temperature,
+            top_p: self.top_p,
+            seed: self.seed,
+            hotwords: to_c_ptr(&self.hotwords, cstrings),
+        }
+    }
+}
+#[derive(Clone, Debug)]
 /// Offline FunASR Nano model configuration.
 pub struct OfflineFunASRNanoModelConfig {
     pub encoder_adaptor: Option<String>,
@@ -398,6 +466,8 @@ pub struct OfflineModelConfig {
     pub medasr: OfflineMedAsrCtcModelConfig,
     pub funasr_nano: OfflineFunASRNanoModelConfig,
     pub fire_red_asr_ctc: OfflineFireRedAsrCtcModelConfig,
+    pub qwen3_asr: OfflineQwen3ASRModelConfig,
+    pub cohere_transcribe: OfflineCohereTranscribeModelConfig,
 
     pub tokens: Option<String>,
     pub num_threads: i32,
@@ -459,6 +529,12 @@ impl OfflineModelConfig {
                 .to_sys(cstrings),
             fire_red_asr_ctc: self
                 .fire_red_asr_ctc
+                .to_sys(cstrings),
+            qwen3_asr: self
+                .qwen3_asr
+                .to_sys(cstrings),
+            cohere_transcribe: self
+                .cohere_transcribe
                 .to_sys(cstrings),
 
             tokens: to_c_ptr(&self.tokens, cstrings),

@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - jni
+      - java
     paths:
       - '.github/workflows/run-java-test.yaml'
       - 'cmake/**'
@@ -107,6 +109,21 @@ jobs:
         run: |
           cd ./java-api-examples
           ./run-version-test.sh
+
+      - name:  Run java test (Cohere Transcribe)
+        shell: bash
+        run: |
+          cd ./java-api-examples
+          ./run-non-streaming-decode-file-cohere-transcribe.sh
+          rm -rf sherpa-onnx-cohere-transcribe-*
+
+      - name:  Run java test (Qwen3 ASR)
+        if: matrix.os != 'ubuntu-latest'
+        shell: bash
+        run: |
+          cd ./java-api-examples
+          ./run-non-streaming-decode-file-qwen3-asr.sh
+          rm -rf sherpa-onnx-qwen3-*
 
       - name:  Run java test (Non-Streaming ASR)
         shell: bash

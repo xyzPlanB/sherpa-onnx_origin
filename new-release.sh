@@ -2,11 +2,11 @@
 
 set -ex
 
-old_version_code=20260319
-new_version_code=20260320
+old_version_code=20260326
+new_version_code=20260403
 
-old_version="1\.12\.30"
-new_version="1\.12\.31"
+old_version="1\.12\.34"
+new_version="1\.12\.35"
 
 replace_str="s/$old_version/$new_version/g"
 
@@ -35,9 +35,12 @@ sed -i.bak "$replace_str" ./jitpack.yml
 sed -i.bak "$replace_str" ./android/SherpaOnnxAar/README.md
 
 sed -i.bak "$replace_str" ./rust-api-examples/Cargo.toml
+sed -i.bak "$replace_str" ./rust-api-examples/for-advanced-users.md
+sed -i.bak "$replace_str" ./rust-api-examples/README.md
 sed -i.bak "$replace_str" ./sherpa-onnx/rust/sherpa-onnx-sys/Cargo.toml
 sed -i.bak "$replace_str" ./sherpa-onnx/rust/sherpa-onnx/Cargo.toml
-sed -i.bak "$replace_str" ./rust-api-examples/README.md
+sed -i.bak "$replace_str" ./sherpa-onnx/rust/sherpa-onnx/src/lib.rs
+sed -i.bak "$replace_str" ./sherpa-onnx/rust/sherpa-onnx/README.md
 
 find android -name build.gradle -type f -exec sed -i.bak "s/sherpa-onnx:v$old_version/sherpa-onnx:v$new_version/g" {} \;
 find android -name build.gradle.kts -type f -exec sed -i.bak "s/sherpa-onnx:v$old_version/sherpa-onnx:v$new_version/g" {} \;

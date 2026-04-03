@@ -10,6 +10,12 @@ target_link_libraries(kws-c-api sherpa-onnx-c-api)
 add_executable(speech-enhancement-gtcrn-c-api speech-enhancement-gtcrn-c-api.c)
 target_link_libraries(speech-enhancement-gtcrn-c-api sherpa-onnx-c-api)
 
+add_executable(source-separation-spleeter-c-api source-separation-spleeter-c-api.c)
+target_link_libraries(source-separation-spleeter-c-api sherpa-onnx-c-api)
+
+add_executable(source-separation-uvr-c-api source-separation-uvr-c-api.c)
+target_link_libraries(source-separation-uvr-c-api sherpa-onnx-c-api)
+
 add_executable(speech-enhancement-dpdfnet-c-api speech-enhancement-dpdfnet-c-api.c)
 target_link_libraries(speech-enhancement-dpdfnet-c-api sherpa-onnx-c-api)
 
@@ -85,6 +91,9 @@ target_link_libraries(fire-red-asr-c-api sherpa-onnx-c-api)
 add_executable(nemo-canary-c-api nemo-canary-c-api.c)
 target_link_libraries(nemo-canary-c-api sherpa-onnx-c-api)
 
+add_executable(cohere-transcribe-c-api cohere-transcribe-c-api.c)
+target_link_libraries(cohere-transcribe-c-api sherpa-onnx-c-api)
+
 add_executable(nemo-parakeet-c-api nemo-parakeet-c-api.c)
 target_link_libraries(nemo-parakeet-c-api sherpa-onnx-c-api)
 
@@ -93,6 +102,9 @@ target_link_libraries(sense-voice-c-api sherpa-onnx-c-api)
 
 add_executable(funasr-nano-c-api funasr-nano-c-api.c)
 target_link_libraries(funasr-nano-c-api sherpa-onnx-c-api)
+
+add_executable(qwen3-asr-c-api qwen3-asr-c-api.c)
+target_link_libraries(qwen3-asr-c-api sherpa-onnx-c-api)
 
 add_executable(sense-voice-with-hr-c-api sense-voice-with-hr-c-api.c)
 target_link_libraries(sense-voice-with-hr-c-api sherpa-onnx-c-api)

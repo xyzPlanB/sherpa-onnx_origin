@@ -75,7 +75,7 @@ The following tables list the examples in this folder.
 
 |File| Description|
 |---|---|
-|[ ./test_speaker_identification.js]( ./test_speaker_identification.js)| Speaker identification from a file|
+|[./test_speaker_identification.js](./test_speaker_identification.js)| Speaker identification from a file|
 
 ## Spoken language identification
 
@@ -139,6 +139,10 @@ The following tables list the examples in this folder.
 |[./test_asr_non_streaming_medasr_ctc.js](./test_asr_non_streaming_medasr_ctc.js)|Non-streaming speech recognition from a file using a [Google MedASR](https://github.com/google-health/medasr) CTC model with greedy search|
 |[./test_asr_non_streaming_funasr_nano.js](./test_asr_non_streaming_funasr_nano.js)|Non-streaming speech recognition from a file using a [FunASR Nano](https://modelscope.cn/models/FunAudioLLM/Fun-ASR-Nano-2512) model|
 |[./test_asr_non_streaming_funasr_nano_async.js](./test_asr_non_streaming_funasr_nano_async.js)|Async non-streaming speech recognition from multiple files using a [FunASR Nano](https://modelscope.cn/models/FunAudioLLM/Fun-ASR-Nano-2512) model|
+|[./test_asr_non_streaming_cohere_transcribe.js](./test_asr_non_streaming_cohere_transcribe.js)|Non-streaming speech recognition from a file using a [Cohere Transcribe](https://cohere.com/research/papers/cohere-labs-aya-expanse-open-weights-and-multilingual-api-2025) model|
+|[./test_asr_non_streaming_cohere_transcribe_async.js](./test_asr_non_streaming_cohere_transcribe_async.js)|Async non-streaming speech recognition from multiple files using a Cohere Transcribe model|
+|[./test_asr_non_streaming_qwen3_asr.js](./test_asr_non_streaming_qwen3_asr.js)|Non-streaming speech recognition from a file using a [Qwen3 ASR](https://github.com/QwenLM/Qwen3-ASR) model|
+|[./test_asr_non_streaming_qwen3_asr_async.js](./test_asr_non_streaming_qwen3_asr_async.js)|Async non-streaming speech recognition from multiple files using a [Qwen3 ASR](https://github.com/QwenLM/Qwen3-ASR) model|
 |[./test_asr_non_streaming_nemo_canary.js](./test_asr_non_streaming_nemo_canary.js)|Non-streaming speech recognition from a file using a [NeMo](https://github.com/NVIDIA/NeMo) [Canary](https://k2-fsa.github.io/sherpa/onnx/nemo/canary.html#sherpa-onnx-nemo-canary-180m-flash-en-es-de-fr-int8-english-spanish-german-french) model|
 |[./test_asr_non_streaming_zipformer_ctc.js](./test_asr_non_streaming_zipformer_ctc.js)|Non-streaming speech recognition from a file using a Zipformer CTC model with greedy search|
 |[./test_asr_non_streaming_nemo_parakeet_tdt_v2.js](./test_asr_non_streaming_nemo_parakeet_tdt_v2.js)|Non-streaming speech recognition from a file using a [NeMo](https://github.com/NVIDIA/NeMo) [parakeet-tdt-0.6b-v2](https://k2-fsa.github.io/sherpa/onnx/pretrained_models/offline-transducer/nemo-transducer-models.html#sherpa-onnx-nemo-parakeet-tdt-0-6b-v2-int8-english) model with greedy search|
@@ -489,6 +493,46 @@ tar xvf sherpa-onnx-funasr-nano-int8-2025-12-30.tar.bz2
 rm sherpa-onnx-funasr-nano-int8-2025-12-30.tar.bz2
 
 node ./test_asr_non_streaming_funasr_nano.js
+```
+
+### Asynchronous non-streaming speech recognition with Cohere Transcribe models
+
+```bash
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01.tar.bz2
+tar xvf sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01.tar.bz2
+rm sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01.tar.bz2
+
+node ./test_asr_non_streaming_cohere_transcribe_async.js
+```
+
+### Non-streaming speech recognition with Cohere Transcribe models
+
+```bash
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01.tar.bz2
+tar xvf sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01.tar.bz2
+rm sherpa-onnx-cohere-transcribe-14-lang-int8-2026-04-01.tar.bz2
+
+node ./test_asr_non_streaming_cohere_transcribe.js
+```
+
+### Asynchronous non-streaming speech recognition with Qwen3 ASR models
+
+```bash
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25.tar.bz2
+tar xvf sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25.tar.bz2
+rm sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25.tar.bz2
+
+node ./test_asr_non_streaming_qwen3_asr_async.js
+```
+
+### Non-streaming speech recognition with Qwen3 ASR models
+
+```bash
+curl -SL -O https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25.tar.bz2
+tar xvf sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25.tar.bz2
+rm sherpa-onnx-qwen3-asr-0.6B-int8-2026-03-25.tar.bz2
+
+node ./test_asr_non_streaming_qwen3_asr.js
 ```
 
 ### Non-streaming speech recognition with Google MedASR CTC models

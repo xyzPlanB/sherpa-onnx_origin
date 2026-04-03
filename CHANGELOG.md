@@ -1,3 +1,67 @@
+## 1.12.35
+
+* Add Go API for Cohere Transcribe (#3466)
+* Add Rust API for Cohere Transcribe (#3465)
+* Add Dart API for Cohere Transcribe (#3464)
+* Add C# API for Cohere Transcribe (#3462)
+* Add Pascal API for Cohere Transcribe (#3463)
+* Add Java and Kotlin API for Cohere Transcribe (#3461)
+* Add JavaScript API for Cohere Transcribe. (#3458)
+* Add Swift API for Cohere Transcribe (#3460)
+* Add C API and CXX API for Cohere transcribe models (#3457)
+* Add C++ runtime and Python API for Cohere Transcribe (#3456)
+* Upload models for https://huggingface.co/CohereLabs/cohere-transcribe-03-2026 (#3453)
+* Add issue template (#3452)
+* Add hotwords support for Qwen3-ASR (#3434)
+* Fix links in README.md to use correct casing (#3451)
+* Add Wake Word and decibri to projects using sherpa-onnx (#3447)
+* Remove num_threads assertion from OnlineRecognizer model configs (#3448)
+* Add Speed of Sound to projects using sherpa-onnx (#3438)
+* Fix Swift tests (#3433)
+* spacemit provider: add provider with config file, then update to 2.0.2 (#3421)
+* Add Go API for source separation (#3432)
+* Fix C API for reading multi-channel wave files (#3430)
+* Add Swift API for source separation (#3426)
+* Fix CI tests (#3429)
+
+## 1.12.34
+
+* Add Pascal API for Qwen3 ASR (#3424)
+* Add Rust API for Qwen3 ASR (#3423)
+* Add Dart API for Qwen3 ASR (#3422)
+* Add Java API and Kotlin API for Qwen3 ASR (#3420)
+* Add JavaScript API (node-addon) for Qwen3 ASR (#3419)
+* Add JavaScript API (WebAssembly) for Qwen3 ASR (#3416)
+* Refactor Go API examples to use sherpa_onnx.ReadWave() (#3415)
+* Fix warnings in Go API (#3414)
+* Add C# API for Qwen3 ASR (#3413)
+* Add Go API for Qwen3 ASR (#3412)
+* Update Swift API example for Qwen3 ASR (#3411)
+* Update tests for Qwen3 ASR (#3410)
+* Upload Qwen3 ASR 0.6B int8 models (#3409)
+* Add Qwen3-ASR support (#3399)
+* Fix TTS deprecated warnings (#3407)
+* Add C# API for source separation (#3406)
+* Add CXX API for source separation (#3405)
+* Add C API for source separation (#3404)
+* Fix building Rust doc (#3403)
+* Update Python subtitle script to support FireRedASR CTC and FunASR Nano (#3400)
+
+## 1.12.33
+
+* Add Rust examples for simulated streaming ASR with VAD (#3398)
+* Add Rust example for real-time ASR + VAD (#3397)
+* Fix printing microphone sample rate. (#3396)
+* Add missing fields of OnlineRecongizerResult to Go API. (#3395)
+* Add examples for punctuations (#3394)
+* Fix building MFC examples for TTS (#3388)
+
+## 1.12.32
+
+* Support static link for Rust package. (#3386)
+* Test Rust API on Windows (#3385)
+* Add VoxSherpa TTS to Projects using sherpa-onnx (#3384)
+
 ## 1.12.31
 
 * Fix building har for OHOS (#3361)
@@ -17,7 +81,6 @@
 * Add doc for Rust API (#3376)
 * Add doc for Dart API (#3377)
 * Add more doc for Rust API (#3378)
-
 ## 1.12.30
 
 * Fix typos in the project (#3293)

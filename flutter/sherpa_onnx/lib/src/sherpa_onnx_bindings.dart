@@ -408,6 +408,30 @@ final class SherpaOnnxOfflineFunAsrNanoModelConfig extends Struct {
   external Pointer<Utf8> hotwords;
 }
 
+final class SherpaOnnxOfflineQwen3AsrModelConfig extends Struct {
+  external Pointer<Utf8> convFrontend;
+  external Pointer<Utf8> encoder;
+  external Pointer<Utf8> decoder;
+  external Pointer<Utf8> tokenizer;
+
+  @Int32()
+  external int maxTotalLen;
+
+  @Int32()
+  external int maxNewTokens;
+
+  @Float()
+  external double temperature;
+
+  @Float()
+  external double topP;
+
+  @Int32()
+  external int seed;
+
+  external Pointer<Utf8> hotwords;
+}
+
 final class SherpaOnnxOfflineWhisperModelConfig extends Struct {
   external Pointer<Utf8> encoder;
   external Pointer<Utf8> decoder;
@@ -432,6 +456,18 @@ final class SherpaOnnxOfflineCanaryModelConfig extends Struct {
 
   @Int32()
   external int usePnc;
+}
+
+final class SherpaOnnxOfflineCohereTranscribeModelConfig extends Struct {
+  external Pointer<Utf8> encoder;
+  external Pointer<Utf8> decoder;
+  external Pointer<Utf8> language;
+
+  @Int32()
+  external int usePunct;
+
+  @Int32()
+  external int useItn;
 }
 
 final class SherpaOnnxOfflineMoonshineModelConfig extends Struct {
@@ -499,6 +535,8 @@ final class SherpaOnnxOfflineModelConfig extends Struct {
   external SherpaOnnxOfflineMedAsrCtcModelConfig medasr;
   external SherpaOnnxOfflineFunAsrNanoModelConfig funasrNano;
   external SherpaOnnxOfflineFireRedAsrCtcModelConfig fireRedAsrCtc;
+  external SherpaOnnxOfflineQwen3AsrModelConfig qwen3Asr;
+  external SherpaOnnxOfflineCohereTranscribeModelConfig cohereTranscribe;
 }
 
 final class SherpaOnnxOfflineRecognizerConfig extends Struct {
@@ -1339,6 +1377,20 @@ typedef AcceptWaveformOfflineNative =
 typedef AcceptWaveformOffline =
     void Function(Pointer<SherpaOnnxOfflineStream>, int, Pointer<Float>, int);
 
+typedef OfflineStreamSetOptionNative =
+    Void Function(
+      Pointer<SherpaOnnxOfflineStream>,
+      Pointer<Utf8>,
+      Pointer<Utf8>,
+    );
+
+typedef OfflineStreamSetOption =
+    void Function(
+      Pointer<SherpaOnnxOfflineStream>,
+      Pointer<Utf8>,
+      Pointer<Utf8>,
+    );
+
 typedef DecodeOfflineStreamNative =
     Void Function(
       Pointer<SherpaOnnxOfflineRecognizer>,
@@ -1901,6 +1953,7 @@ class SherpaOnnxBindings {
   static CreateOfflineStream? createOfflineStream;
   static DestroyOfflineStream? destroyOfflineStream;
   static AcceptWaveformOffline? acceptWaveformOffline;
+  static OfflineStreamSetOption? offlineStreamSetOption;
   static DecodeOfflineStream? decodeOfflineStream;
   static GetOfflineStreamResultAsJson? getOfflineStreamResultAsJson;
   static DestroyOfflineStreamResultJson? destroyOfflineStreamResultJson;
@@ -2433,6 +2486,12 @@ class SherpaOnnxBindings {
     acceptWaveformOffline ??= dynamicLibrary
         .lookup<NativeFunction<AcceptWaveformOfflineNative>>(
           'SherpaOnnxAcceptWaveformOffline',
+        )
+        .asFunction();
+
+    offlineStreamSetOption ??= dynamicLibrary
+        .lookup<NativeFunction<OfflineStreamSetOptionNative>>(
+          'SherpaOnnxOfflineStreamSetOption',
         )
         .asFunction();
 
