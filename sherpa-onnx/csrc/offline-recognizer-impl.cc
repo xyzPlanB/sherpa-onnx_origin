@@ -24,6 +24,7 @@
 #include "kaldifst/csrc/kaldi-fst-io.h"
 #include "onnxruntime_cxx_api.h"  // NOLINT
 #include "sherpa-onnx/csrc/file-utils.h"
+#include "sherpa-onnx/csrc/fst-utils.h"
 #include "sherpa-onnx/csrc/macros.h"
 #include "sherpa-onnx/csrc/offline-recognizer-canary-impl.h"
 #include "sherpa-onnx/csrc/offline-recognizer-cohere-transcribe-impl.h"
@@ -320,10 +321,8 @@ std::unique_ptr<OfflineRecognizerImpl> OfflineRecognizerImpl::Create(
     SHERPA_ONNX_EXIT(-1);
   }
 
-  auto buf = ReadFile(model_filename);
-
-  auto encoder_sess =
-      std::make_unique<Ort::Session>(env, buf.data(), buf.size(), sess_opts);
+  auto encoder_sess = std::make_unique<Ort::Session>(
+      env, SHERPA_ONNX_TO_ORT_PATH(model_filename), sess_opts);
 
   Ort::ModelMetadata meta_data = encoder_sess->GetModelMetadata();
 
@@ -853,19 +852,11 @@ OfflineRecognizerImpl::OfflineRecognizerImpl(
 
       auto buf = ReadFile(mgr, f);
 
-      std::unique_ptr<std::istream> s(
-          new std::istringstream(std::string(buf.data(), buf.size())));
-
-      std::unique_ptr<fst::FarReader<fst::StdArc>> reader(
-          fst::FarReader<fst::StdArc>::Open(std::move(s)));
-
-      for (; !reader->Done(); reader->Next()) {
-        std::unique_ptr<fst::StdConstFst> r(
-            fst::CastOrConvertToConstFst(reader->GetFst()->Copy()));
-
+      auto fsts = ReadFstsFromFar(buf);
+      for (auto &r : fsts) {
         itn_list_.push_back(
             std::make_unique<kaldifst::TextNormalizer>(std::move(r)));
-      }  // for (; !reader->Done(); reader->Next())
+      }
     }  // for (const auto &f : files)
   }  // if (!config.rule_fars.empty())
 

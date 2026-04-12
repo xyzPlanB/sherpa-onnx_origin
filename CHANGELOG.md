@@ -1,3 +1,27 @@
+## 1.12.38
+
+* Update onnxruntime to use v1.24.4 (#3501)
+
+## 1.12.37
+
+* Update openfst to v1.8.5 and fix compiler warnings. (#3495)
+* Use onnxruntime 1.24.3 for Android (#3494)
+* Update FunASR Nano int8 models (#3493)
+* Fix incorrect URL in dotnet README (#3491)
+* Fix package name format for ort url (#3489)
+
+## 1.12.36
+
+* Dotnet Android arm64 targeting (#3485)
+* Use file path to initialize onnxruntime session. (#3482)
+* update onnxruntime package name and hash for riscv64-spacemit (#3481)
+* Fix initializing fp32 Qwen3-ASR models. (#3480)
+* Fix Qwen3ASR hotwords handling (#3477)
+* Update Qwen3 ASR models (#3476)
+* Fix building for vad+asr (#3475)
+* Add per-stream language hint for Qwen3-ASR (and tighten scaffold cleanup) (#3472)
+* Add hotwords argument to OfflineQwen3ASRModelConfig (#3468)
+
 ## 1.12.35
 
 * Add Go API for Cohere Transcribe (#3466)
