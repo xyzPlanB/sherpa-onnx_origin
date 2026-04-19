@@ -1,6 +1,6 @@
 [package]
 name = "sherpa-onnx-sys"
-version = "1.12.38"
+version = "1.12.39"
 edition = "2021"
 description = "Raw FFI bindings to the sherpa-onnx C API"
 license = "Apache-2.0"
@@ -27,7 +27,7 @@ shared = []
 [build-dependencies]
 bzip2 = "0.4"
 tar = "0.4"
-ureq = "2.12"
+ureq = { version = "2.12", features = ["proxy-from-env"] }
 
 [package.metadata.docs.rs]
 default-features = false

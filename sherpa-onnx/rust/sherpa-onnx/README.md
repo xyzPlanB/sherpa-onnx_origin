@@ -8,7 +8,7 @@ For most users, this is enough:
 
 ```toml
 [dependencies]
-sherpa-onnx = "1.12.38"
+sherpa-onnx = "1.12.39"
 ```
 
 The default Rust configuration uses **static** linking.
@@ -17,6 +17,8 @@ If `SHERPA_ONNX_LIB_DIR` is not set, the build script automatically downloads a
 matching prebuilt native `-lib` archive from
 [GitHub releases](https://github.com/k2-fsa/sherpa-onnx/releases) and uses it
 for the build.
+The downloader also honors standard proxy environment variables such as
+`HTTPS_PROXY`, `HTTP_PROXY`, and `NO_PROXY` (including lowercase variants).
 
 ## Use shared libraries
 
@@ -24,7 +26,7 @@ To use **shared** libraries instead of the default static mode:
 
 ```toml
 [dependencies]
-sherpa-onnx = { version = "1.12.38", default-features = false, features = ["shared"] }
+sherpa-onnx = { version = "1.12.39", default-features = false, features = ["shared"] }
 ```
 
 When shared libraries are used:
