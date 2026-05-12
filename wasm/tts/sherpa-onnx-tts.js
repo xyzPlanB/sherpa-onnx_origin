@@ -1060,6 +1060,13 @@ function createOfflineTts(Module, myConfig) {
       offlineTtsPocketModelConfig.vocabJson = './vocab.json';
       offlineTtsPocketModelConfig.tokenScoresJson = './token_scores.json';
       break;
+    case 6:
+      // KittenTTS
+      offlineTtsKittenModelConfig.model = './model.onnx';
+      offlineTtsKittenModelConfig.voices = './voices.bin';
+      offlineTtsKittenModelConfig.tokens = './tokens.txt';
+      offlineTtsKittenModelConfig.dataDir = './espeak-ng-data';
+      break;
   }
 
   const offlineTtsModelConfig = {
@@ -1088,10 +1095,7 @@ function createOfflineTts(Module, myConfig) {
   return new OfflineTts(offlineTtsConfig, Module);
 }
 
-if (typeof process == 'object' && typeof process.versions == 'object' &&
-    typeof process.versions.node == 'string') {
-  module.exports = {
-    createOfflineTts,
-    getDefaultOfflineTtsModelType,
-  };
-}
+export {
+  createOfflineTts,
+  getDefaultOfflineTtsModelType,
+};

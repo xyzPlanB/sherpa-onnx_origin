@@ -3,10 +3,11 @@
 // Copyright (c)  2023-2025  Xiaomi Corporation
 
 #include "sherpa-onnx/csrc/online-recognizer-impl.h"
+#include "sherpa-onnx/csrc/ort-env.h"
 
 #include <memory>
-#include <string>
 #include <sstream>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -27,6 +28,7 @@
 #include "sherpa-onnx/csrc/online-recognizer-paraformer-impl.h"
 #include "sherpa-onnx/csrc/online-recognizer-transducer-impl.h"
 #include "sherpa-onnx/csrc/online-recognizer-transducer-nemo-impl.h"
+#include "sherpa-onnx/csrc/online-recognizer-transducer-nemo-parakeet-unified-impl.h"
 #include "sherpa-onnx/csrc/onnx-utils.h"
 #include "sherpa-onnx/csrc/session.h"
 #include "sherpa-onnx/csrc/text-utils.h"
@@ -37,6 +39,14 @@
 #endif
 
 namespace sherpa_onnx {
+
+static bool IsNeMoParakeetUnifiedStreaming(const Ort::Session &decoder_sess) {
+  Ort::AllocatorWithDefaultOptions allocator;
+  Ort::ModelMetadata meta_data = decoder_sess.GetModelMetadata();
+  return LookupCustomModelMetaData(meta_data, "streaming_model_type",
+                                   allocator) ==
+         "nemo_parakeet_unified_streaming";
+}
 
 std::unique_ptr<OnlineRecognizerImpl> OnlineRecognizerImpl::Create(
     const OnlineRecognizerConfig &config) {
@@ -62,7 +72,7 @@ std::unique_ptr<OnlineRecognizerImpl> OnlineRecognizerImpl::Create(
   }
 
   if (!config.model_config.transducer.encoder.empty()) {
-    Ort::Env env(ORT_LOGGING_LEVEL_ERROR);
+    Ort::Env env = CreateOrtEnv();
 
     Ort::SessionOptions sess_opts;
     sess_opts.SetIntraOpNumThreads(1);
@@ -71,6 +81,11 @@ std::unique_ptr<OnlineRecognizerImpl> OnlineRecognizerImpl::Create(
     auto sess = std::make_unique<Ort::Session>(
         env, SHERPA_ONNX_TO_ORT_PATH(config.model_config.transducer.decoder),
         sess_opts);
+
+    if (IsNeMoParakeetUnifiedStreaming(*sess)) {
+      return std::make_unique<
+          OnlineRecognizerTransducerNeMoParakeetUnifiedImpl>(config);
+    }
 
     size_t node_count = sess->GetOutputCount();
 
@@ -123,7 +138,7 @@ std::unique_ptr<OnlineRecognizerImpl> OnlineRecognizerImpl::Create(
   }
 
   if (!config.model_config.transducer.encoder.empty()) {
-    Ort::Env env(ORT_LOGGING_LEVEL_ERROR);
+    Ort::Env env = CreateOrtEnv();
 
     Ort::SessionOptions sess_opts;
     sess_opts.SetIntraOpNumThreads(1);
@@ -132,6 +147,11 @@ std::unique_ptr<OnlineRecognizerImpl> OnlineRecognizerImpl::Create(
     auto decoder_model = ReadFile(mgr, config.model_config.transducer.decoder);
     auto sess = std::make_unique<Ort::Session>(env, decoder_model.data(),
                                                decoder_model.size(), sess_opts);
+
+    if (IsNeMoParakeetUnifiedStreaming(*sess)) {
+      return std::make_unique<
+          OnlineRecognizerTransducerNeMoParakeetUnifiedImpl>(mgr, config);
+    }
 
     size_t node_count = sess->GetOutputCount();
 

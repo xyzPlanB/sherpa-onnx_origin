@@ -3,7 +3,7 @@ name: tauri-vad-asr
 on:
   push:
     branches:
-      - fix-rust
+      - apk
 
   workflow_dispatch:
 
@@ -17,12 +17,12 @@ permissions:
 jobs:
   tauri_vad_asr:
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }} ${{ matrix.index }}/20
+    name: ${{ matrix.os }} ${{ matrix.index }}/10
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm, macos-latest, windows-latest]
-        index: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19']
+        index: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
     steps:
       - uses: actions/checkout@v4
@@ -40,15 +40,6 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
-      - name: Install Python dependencies
-        shell: bash
-        run: |
-          if [[ "${{ runner.os }}" == "macOS" ]]; then
-            python3 -m pip install --upgrade --break-system-packages pip jinja2 pillow
-          else
-            python3 -m pip install --upgrade pip jinja2 pillow
-          fi
-
       - name: Install Tauri CLI
         shell: bash
         run: |
@@ -58,7 +49,7 @@ jobs:
         shell: bash
         run: |
           cd scripts/tauri
-          python3 generate-vad-asr.py --total 20 --index ${{ matrix.index }}
+          python3 generate-vad-asr.py --total 10 --index ${{ matrix.index }}
           chmod +x build-tauri-vad-asr.sh
           mv build-tauri-vad-asr.sh ../..
 

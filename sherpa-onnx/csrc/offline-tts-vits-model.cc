@@ -3,6 +3,7 @@
 // Copyright (c)  2023  Xiaomi Corporation
 
 #include "sherpa-onnx/csrc/offline-tts-vits-model.h"
+#include "sherpa-onnx/csrc/ort-env.h"
 
 #include <algorithm>
 #include <memory>
@@ -31,7 +32,7 @@ class OfflineTtsVitsModel::Impl {
  public:
   explicit Impl(const OfflineTtsModelConfig &config)
       : config_(config),
-        env_(ORT_LOGGING_LEVEL_ERROR),
+        env_(CreateOrtEnv()),
         sess_opts_(GetSessionOptions(config)),
         allocator_{} {
     sess_ = std::make_unique<Ort::Session>(
@@ -42,7 +43,7 @@ class OfflineTtsVitsModel::Impl {
   template <typename Manager>
   Impl(Manager *mgr, const OfflineTtsModelConfig &config)
       : config_(config),
-        env_(ORT_LOGGING_LEVEL_ERROR),
+        env_(CreateOrtEnv()),
         sess_opts_(GetSessionOptions(config)),
         allocator_{} {
     auto buf = ReadFile(mgr, config.vits.model);
@@ -122,8 +123,8 @@ class OfflineTtsVitsModel::Impl {
  private:
   void Init(void *model_data, size_t model_data_length) {
     if (model_data) {
-      sess_ = std::make_unique<Ort::Session>(
-          env_, model_data, model_data_length, sess_opts_);
+      sess_ = std::make_unique<Ort::Session>(env_, model_data,
+                                             model_data_length, sess_opts_);
     } else if (!sess_) {
       SHERPA_ONNX_LOGE(
           "Please pass model data or initialize the session outside of "
@@ -187,6 +188,7 @@ class OfflineTtsVitsModel::Impl {
     SHERPA_ONNX_READ_META_DATA_WITH_DEFAULT(meta_data_.use_eos_bos,
                                             "use_eos_bos", 1);
     SHERPA_ONNX_READ_META_DATA_WITH_DEFAULT(meta_data_.pad_id, "pad_id", 0);
+    SHERPA_ONNX_READ_META_DATA_WITH_DEFAULT(meta_data_.use_g2pw, "has_g2pw", 0);
 
     std::string comment;
     SHERPA_ONNX_READ_META_DATA_STR(comment, "comment");

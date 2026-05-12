@@ -4,11 +4,11 @@ set -ex
 
 cd "$(dirname "$0")"
 
-old_version_code=20260412
-new_version_code=20260417
+old_version_code=20260428
+new_version_code=20260508
 
-old_version="1\.12\.38"
-new_version="1\.12\.39"
+old_version="1\.13\.0"
+new_version="1\.13\.1"
 
 replace_str="s/$old_version/$new_version/g"
 
@@ -47,6 +47,10 @@ sed -i.bak "$replace_str" ./sherpa-onnx/rust/sherpa-onnx/README.md
 sed -i.bak "$replace_str" ./tauri-examples/non-streaming-speech-recognition-from-file/package.json
 sed -i.bak "$replace_str" ./tauri-examples/non-streaming-speech-recognition-from-file/src-tauri/Cargo.toml
 sed -i.bak "$replace_str" ./tauri-examples/non-streaming-speech-recognition-from-file/src-tauri/tauri.conf.json
+
+sed -i.bak "$replace_str" ./tauri-examples/non-streaming-speech-recognition-from-microphone/package.json
+sed -i.bak "$replace_str" ./tauri-examples/non-streaming-speech-recognition-from-microphone/src-tauri/Cargo.toml
+sed -i.bak "$replace_str" ./tauri-examples/non-streaming-speech-recognition-from-microphone/src-tauri/tauri.conf.json
 
 find android -name build.gradle -type f -exec sed -i.bak "s/sherpa-onnx:v$old_version/sherpa-onnx:v$new_version/g" {} \;
 find android -name build.gradle.kts -type f -exec sed -i.bak "s/sherpa-onnx:v$old_version/sherpa-onnx:v$new_version/g" {} \;

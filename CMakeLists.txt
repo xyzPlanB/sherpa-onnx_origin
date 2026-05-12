@@ -28,7 +28,7 @@ project(sherpa-onnx)
 # Remember to update
 # ./CHANGELOG.md
 # ./new-release.sh
-set(SHERPA_ONNX_VERSION "1.12.39")
+set(SHERPA_ONNX_VERSION "1.13.1")
 
 # Disable warning about
 #
@@ -332,6 +332,12 @@ endif()
 
 if(SHERPA_ONNX_ENABLE_WASM)
   add_definitions(-DSHERPA_ONNX_ENABLE_WASM=1)
+  # Build every wasm artifact with pthread/atomics support so the .a files
+  # can be linked with the threaded ONNX Runtime prebuild and a wasm module
+  # that pre-spawns a worker pool. Browsers require COOP/COEP headers to
+  # expose SharedArrayBuffer; wasm/serve.py is provided for that.
+  string(APPEND CMAKE_C_FLAGS " -pthread")
+  string(APPEND CMAKE_CXX_FLAGS " -pthread -fexceptions")
 endif()
 
 if(SHERPA_ONNX_ENABLE_WASM_KWS)
